@@ -1,15 +1,40 @@
-﻿# CMakeList.txt : CMake project for GameEngineDevelopment, include source and define
-# project specific logic here.
-#
+﻿cmake_minimum_required(VERSION 3.20)
 
-# Add source to this project's executable.
-project(GameEngine)
+project(GameEngine LANGUAGES C)
 
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include)
+
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+find_package(OpenGL REQUIRED)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw)
+
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 add_compile_definitions(ENGINE_PLATFORM_WINDOWS ENGINE_BUILD_DLL)
-add_library (GameEngine SHARED "application.cpp" "application.h" "core.h")
+
+SET(PLATFORM_FILES "")
+
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  message("Building for windows")
+  list(APPEND PLATFORM_FILES "src/platform/windows.c")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux") 
+  message("Building for linux")
+  message(FATAL_ERROR "linux not implemented")
+else()
+  message(FATAL_ERROR "platform ${CMAKE_SYSTEM_NAME} not supported")
+endif()
+
+add_library (GameEngine SHARED "include/core.h" "include/platform.h" ${PLATFORM_FILES})
+target_link_libraries(GameEngine glfw OpenGL::GL)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET GameEngine PROPERTY CXX_STANDARD 20)
 endif()
-
-# TODO: Add tests and install targets if needed.
