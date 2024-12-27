@@ -2,3 +2,5 @@ out/
 CMakePresets.json
 .vs/
 build/
+*.sublime-project
+*.sublime-workspace
