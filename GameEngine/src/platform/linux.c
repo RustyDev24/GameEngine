@@ -1,4 +1,3 @@
-// #include "include/platform.h"
 #include "GLFW/glfw3.h"
 #include "include/platform.h"
 #include <stdlib.h>
@@ -31,7 +30,7 @@ static void glfw_window_size_callback(GLFWwindow* window, int width, int height)
     pl_window->height = height;
     pl_window->width = width;
 
-    if (pl_window && pl_window->window_closed_callback)
+    if (pl_window && pl_window->window_size_callback)
     {
         pl_window->window_size_callback(pl_window);
     }
@@ -50,9 +49,13 @@ platform_window* platform_window_create(uint32_t width, uint32_t height, const c
     window->height = height;
     window->title = title;
 
+    window->window_size_callback = NULL;
+    window->window_closed_callback = NULL;
+
     glfwSetWindowUserPointer(window->window, window);
 
     glfwSetWindowCloseCallback(window->window, glfw_window_close_callback);
+    glfwSetWindowSizeCallback(window->window, glfw_window_size_callback);
 
     glfwMakeContextCurrent(window->window);
 
@@ -65,16 +68,6 @@ void platform_window_update(platform_window* window)
     glfwPollEvents();
 }
 
-const uint32_t platform_window_get_height(const platform_window* window)
-{
-    return window->height;
-}
-
-const uint32_t platform_window_get_width(const platform_window* window)
-{
-    return window->width;
-}
-
 void platform_register_window_closed_callback(platform_window* window,
                                               platform_window_closed_callback callback)
 {
@@ -85,6 +78,16 @@ void platform_register_window_size_callback(platform_window* window,
                                             platform_window_size_callback callback)
 {
     window->window_size_callback = callback;
+}
+
+const uint32_t platform_window_get_height(const platform_window* window)
+{
+    return window->height;
+}
+
+const uint32_t platform_window_get_width(const platform_window* window)
+{
+    return window->width;
 }
 
 void platform_window_destroy(platform_window** window)

@@ -17,17 +17,17 @@ find_package(OpenGL REQUIRED)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-add_compile_definitions(ENGINE_PLATFORM_WINDOWS ENGINE_BUILD_DLL)
 
 SET(PLATFORM_FILES "")
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+  add_compile_definitions(ENGINE_PLATFORM_WINDOWS ENGINE_BUILD_DLL)
   message("Building for windows")
   list(APPEND PLATFORM_FILES "src/platform/windows.c")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux") 
   message("Building for linux")
-  message(FATAL_ERROR "linux not implemented yet")
+  list(APPEND PLATFORM_FILES "src/platform/linux.c")
 else()
   message(FATAL_ERROR "platform ${CMAKE_SYSTEM_NAME} not supported")
 endif()

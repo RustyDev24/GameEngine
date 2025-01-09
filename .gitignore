@@ -4,3 +4,5 @@ CMakePresets.json
 build/
 *.sublime-project
 *.sublime-workspace
+.cache/
+compile_commands.json
