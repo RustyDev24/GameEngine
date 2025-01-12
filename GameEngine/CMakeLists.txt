@@ -8,6 +8,7 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -32,5 +33,5 @@ else()
   message(FATAL_ERROR "platform ${CMAKE_SYSTEM_NAME} not supported")
 endif()
 
-add_library (GameEngine SHARED "include/core.h" "include/platform.h" ${PLATFORM_FILES})
+add_library (GameEngine SHARED "include/core.h" "include/platform.h" "include/renderer.h" "src/renderer/opengl_renderer.c" "vendor/glad/src/glad.c" ${PLATFORM_FILES})
 target_link_libraries(GameEngine glfw OpenGL::GL)

@@ -1,6 +1,7 @@
 // #include "include/platform.h"
 #include "GLFW/glfw3.h"
 #include "include/platform.h"
+#include "include/renderer.h"
 #include <stdlib.h>
 
 static int s_windows = 0;
@@ -54,14 +55,14 @@ platform_window* platform_window_create(uint32_t width, uint32_t height, const c
 
     glfwSetWindowCloseCallback(window->window, glfw_window_close_callback);
 
-    glfwMakeContextCurrent(window->window);
+    renderer_init(window->window);
 
     return window;
 }
 
 void platform_window_update(platform_window* window)
 {
-    glfwSwapBuffers(window->window);
+    renderer_swap_buffers(window->window);
     glfwPollEvents();
 }
 
